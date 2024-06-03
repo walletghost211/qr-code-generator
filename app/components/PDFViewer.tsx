@@ -10,6 +10,7 @@ const PDFViewer: React.FC = () => {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pages, setPages] = useState<ImageData[]>([]);
+  const [qrCodeData, setQRCodeData] = useState<string | null>(null);
 
   useEffect(() => {
     pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -62,7 +63,7 @@ const PDFViewer: React.FC = () => {
     const code = jsQR(imageData.data, imageData.width, imageData.height);
 
     if (code) {
-      console.log("QR code detected:", code.data);
+      setQRCodeData(code.data); // Set detected QR code data
     }
   };
 
@@ -90,6 +91,13 @@ const PDFViewer: React.FC = () => {
         <p>
           Page {pageNumber} of {numPages}
         </p>
+      )}
+
+      {qrCodeData && ( // Render detected QR code data
+        <div>
+          <p>Detected QR Code:</p>
+          <p>{qrCodeData}</p>
+        </div>
       )}
     </>
   );
